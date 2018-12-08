@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="viewModel" type="com.cat.eosinfo.viewmodel.MainViewModel"/>
+    </data>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/my_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rl_list"
+                android:layout_below="@+id/my_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:recyclerAdapter="@{viewModel.getAdapter()}"/>
+
+    </RelativeLayout>
+</layout>

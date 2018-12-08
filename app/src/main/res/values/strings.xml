@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">EosInfo</string>
+    <string name="action_sync">action_sync</string>
+</resources>
