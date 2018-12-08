@@ -1,51 +1,69 @@
 package com.cat.eosinfo.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.cat.eosinfo.adapter.BlockAdapter
+import com.cat.eosinfo.repo.model.Block
 import com.cat.eosinfo.repo.model.ServerInfo
+import com.cat.eosinfo.util.SingleLiveEvent
+import com.cat.eosinfo.util.Utils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 class MainViewModel : ViewModel() {
-    val adapter = BlockAdapter()
-    val compositeDisposable = CompositeDisposable()
+    val adapter = BlockAdapter(object : BlockAdapter.BlockViewListener {
+        override fun onClicked(block: Block, pos: Int) {
+            blockClicked.value = block
+        }
+    })
+    private val compositeDisposable = CompositeDisposable()
+    private val okHttpClient = OkHttpClient.Builder()
+        .callTimeout(60, TimeUnit.SECONDS)
+        .connectTimeout(60, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .build()
 
-    fun loadData() {
-        val data = ArrayList(arrayOf("Block 1", "Block 2").toList())
-        this.adapter.notifyDataSetChanged(data)
+    val scrollTo = SingleLiveEvent<Int>()
+    val blockClicked = SingleLiveEvent<Block>()
+
+    companion object {
+        val JSON = MediaType.parse("application/json; charset=utf-8")
     }
 
+    /**
+     * Sync first 20 blocks
+     */
     fun sync() {
+        this.adapter.clearData()
         // Start WorkManager
-//        Observable.range(0, 20)
-        this.compositeDisposable.add(Observable.create<JSONObject> {
-                val okHttpClient = OkHttpClient.Builder()
-                    .callTimeout(60, TimeUnit.SECONDS)
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .build()
+        this.compositeDisposable.add(Observable.create<Block> {
+            val serverInfo = Utils.requestServerInfo(okHttpClient)
+            val listOfBlock = Block.empty20Items()
+            var prevBlockId = serverInfo.head_block_id
+            listOfBlock.forEach { block ->
+                val fullBlockData = Utils.requestBlock(okHttpClient, prevBlockId)
+                block.id = fullBlockData.id
+                block.block_num = fullBlockData.block_num
+                block.previous = fullBlockData.previous
+                block.producer = fullBlockData.producer
+                block.producer_signature = fullBlockData.producer_signature
+                block.transactions = fullBlockData.transactions
 
-                val request = Request
-                    .Builder()
-                    .url("https://api.eosnewyork.io/v1/chain/get_info")
-                    .post(RequestBody.create(null, "application/json"))
-
-                val rawResult = okHttpClient.newCall(request.build()).execute().body()!!.string()
-                it.onNext(JSONObject(rawResult))
+                prevBlockId = block.previous!!
+                it.onNext(block)
             }
+
+            it.onComplete()
+        }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                Log.d("Sync", "ServerInfo $it")
+                this.adapter.add(it)
+                this.scrollTo.value = this.adapter.itemCount - 1
             })
     }
 

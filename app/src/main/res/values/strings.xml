@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">EosInfo</string>
     <string name="action_sync">action_sync</string>
+    <string name="detail_producer">Producer %s</string>
+    <string name="detail_producer_signature">Signature %s</string>
+    <string name="detail_transaction_count">%s transactions</string>
 </resources>

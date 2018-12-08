@@ -5,15 +5,19 @@
         <variable name="viewModel" type="com.cat.eosinfo.viewmodel.BlockItemViewModel"/>
     </data>
 
-    <FrameLayout
+    <androidx.cardview.widget.CardView
+            android:id="@+id/cv_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="4dp"
+            android:layout_marginTop="10dp">
 
         <androidx.appcompat.widget.AppCompatTextView
+                android:layout_margin="5dp"
                 android:id="@+id/tv_block_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:textViewLiveData="@{viewModel.getBlockName()}"/>
 
-    </FrameLayout>
+    </androidx.cardview.widget.CardView>
 </layout>

@@ -31,7 +31,13 @@ fun textViewLiveData(textView: AppCompatTextView, liveData: LiveData<String>?) {
                 return@Observer
             }
 
-            textView.text = it
+            val currentContent = textView.text.toString()
+
+            if (currentContent != "") {
+                textView.text = String.format(currentContent, it)
+            } else {
+                textView.text = it
+            }
         })
     }
 }

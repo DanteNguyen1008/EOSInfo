@@ -1,13 +1,25 @@
 package com.cat.eosinfo.repo.model
 
-data class TransactionX(
-    val actions: List<Action>,
-    val context_free_actions: List<Any>,
-    val delay_sec: Int,
-    val expiration: String,
-    val max_cpu_usage_ms: Int,
-    val max_net_usage_words: Int,
-    val ref_block_num: Int,
-    val ref_block_prefix: Int,
-    val transaction_extensions: List<Any>
-)
+import android.os.Parcelable
+import com.cat.eosinfo.extension.getJSONArraySafe
+import com.cat.eosinfo.extension.toList
+import kotlinx.android.parcel.Parcelize
+import org.json.JSONObject
+
+@Parcelize
+data class TransactionX(val actions: List<Action>) : Parcelable {
+    companion object {
+
+        @JvmStatic
+        fun fromJSON(jsonObject: JSONObject): TransactionX {
+            val actions = ArrayList<Action>()
+            val actionsArr = jsonObject.getJSONArraySafe("actions")
+
+            if (actionsArr != null) {
+                actions.addAll(actionsArr.toList().map { Action.fromJSON(it as JSONObject) })
+            }
+
+            return TransactionX(actions)
+        }
+    }
+}
