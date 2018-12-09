@@ -4,12 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cat.eosinfo.adapter.TransactionAdapter
 import com.cat.eosinfo.repo.model.Block
+import com.cat.eosinfo.repo.model.Transaction
 
 class DetailViewModel : ViewModel() {
-    val adapter = TransactionAdapter()
     val producer = MutableLiveData<String>()
     val producerSignature = MutableLiveData<String>()
     val transactionCount = MutableLiveData<String>()
+    val transactionDataLoad = MutableLiveData<List<Transaction>>()
 
     /**
      * Load data from previous screen
@@ -29,7 +30,7 @@ class DetailViewModel : ViewModel() {
         }
 
         if (block.transactions != null) {
-            this.adapter.notifyDataSetChanged(ArrayList(block.transactions!!))
+            this.transactionDataLoad.value = block.transactions
         }
     }
 }

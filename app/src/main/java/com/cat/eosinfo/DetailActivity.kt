@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cat.eosinfo.adapter.TransactionAdapter
 import com.cat.eosinfo.databinding.ActivityDetailBinding
+import com.cat.eosinfo.repo.model.Transaction
 import com.cat.eosinfo.viewmodel.DetailViewModel
 import com.cat.eosinfo.viewmodel.providers.DetailViewModelFactory
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -17,17 +20,21 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private lateinit var binding : ActivityDetailBinding
+    private lateinit var adapter : TransactionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
+        this.binding.viewModel = ViewModelProviders.of(this, DetailViewModelFactory(this.intent.extras)).get(DetailViewModel::class.java)
+        this.binding.viewModel!!.transactionDataLoad.observe(this, Observer { this.onTransactionListLoaded(it) })
+        rl_transaction_list.layoutManager = LinearLayoutManager(this)
+        this.adapter = TransactionAdapter()
+        rl_transaction_list.adapter = this.adapter
+        btn_toggle_transaction.setOnClickListener { this.toggleTransactionList() }
     }
 
-    override fun onStart() {
-        super.onStart()
-        this.binding.viewModel = ViewModelProviders.of(this, DetailViewModelFactory(this.intent.extras)).get(DetailViewModel::class.java)
-        rl_transaction_list.layoutManager = LinearLayoutManager(this)
-        btn_toggle_transaction.setOnClickListener { this.toggleTransactionList() }
+    private fun onTransactionListLoaded(list: List<Transaction>?) {
+        this.adapter.notifyDataSetChanged(ArrayList(list!!))
     }
 
     private fun toggleTransactionList() {

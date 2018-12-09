@@ -50,7 +50,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/rl_transaction_list"
                 android:visibility="gone"
-                app:recyclerAdapter="@{viewModel.getAdapter()}"
                 android:layout_marginBottom="10dp"/>
 
     </LinearLayout>
