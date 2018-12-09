@@ -4,4 +4,10 @@
     <string name="detail_producer">Producer %s</string>
     <string name="detail_producer_signature">Signature %s</string>
     <string name="detail_transaction_count">%s transactions</string>
+    <string name="transaction_time">Time %s</string>
+    <string name="transaction_from">From %s</string>
+    <string name="transaction_to">To %s</string>
+    <string name="transaction_amount">Amount %s</string>
+    <string name="transaction_single">Transaction %s</string>
+    <string name="toggle_transactions">Toggle Transactions</string>
 </resources>

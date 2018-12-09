@@ -1,5 +1,6 @@
 package com.cat.eosinfo.extension
 
+import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
@@ -28,6 +29,7 @@ fun textViewLiveData(textView: AppCompatTextView, liveData: LiveData<String>?) {
     if (parentActivity != null && liveData != null) {
         liveData.observe(parentActivity, Observer {
             if (it == null || it == "") {
+                textView.visibility = View.GONE
                 return@Observer
             }
 

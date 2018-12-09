@@ -7,42 +7,50 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp">
+            android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
+        <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/detail_producer"
-                app:textViewLiveData="@{viewModel.getProducer()}"
-                android:layout_marginBottom="10dp"/>
+                android:orientation="vertical"
+                android:padding="10dp">
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_producer"
+                    app:textViewLiveData="@{viewModel.getProducer()}"
+                    android:layout_marginBottom="10dp"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/detail_producer_signature"
-                app:textViewLiveData="@{viewModel.getProducerSignature()}"
-                android:layout_marginBottom="10dp"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_producer_signature"
+                    app:textViewLiveData="@{viewModel.getProducerSignature()}"
+                    android:layout_marginBottom="10dp"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/detail_transaction_count"
-                app:textViewLiveData="@{viewModel.getTransactionCount()}"
-                android:layout_marginBottom="10dp"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_transaction_count"
+                    app:textViewLiveData="@{viewModel.getTransactionCount()}"
+                    android:layout_marginBottom="10dp"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_toggle_transaction"
-                android:visibility="gone"
-                android:layout_marginBottom="10dp"/>
+            <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:textColor="#FFFFFF"
+                    android:text="@string/toggle_transactions"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_toggle_transaction"
+                    android:layout_marginBottom="10dp"/>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/rl_transaction_list"
                 android:visibility="gone"
+                app:recyclerAdapter="@{viewModel.getAdapter()}"
                 android:layout_marginBottom="10dp"/>
 
     </LinearLayout>
